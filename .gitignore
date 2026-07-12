@@ -1,0 +1,18 @@
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+# Python / backend
+api/__pycache__/
+api/**/__pycache__/
+api/.venv/
+api/venv/
+api/.env
+
+# Vercel
+.vercel/
+
+# OS
+.DS_Store

@@ -36,10 +36,15 @@ async def _init_connection(conn: asyncpg.Connection) -> None:
 async def get_pool() -> asyncpg.Pool:
     global _pool
     if _pool is None:
+        # Small pool: on Vercel each warm function instance keeps its own pool,
+        # so keep max_size low to avoid exhausting Supabase's connection limit
+        # across many concurrent serverless instances. Use the transaction
+        # pooler (port 6543) in production. statement_cache_size=0 is required
+        # because pgbouncer transaction mode doesn't support prepared statements.
         _pool = await asyncpg.create_pool(
             settings.database_url,
             min_size=1,
-            max_size=5,
+            max_size=2,
             init=_init_connection,
             statement_cache_size=0,
         )

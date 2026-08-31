@@ -5,7 +5,6 @@ import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CornerMarks, RegistrationMark } from "@/components/Furniture"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { supabase } from "@/lib/supabase"
@@ -59,26 +58,6 @@ export function Login() {
       } else {
         navigate("/")
       }
-    } catch (err) {
-      toast.error(err instanceof Error ? humanizeAuthError(err.message) : "Something went wrong")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function handleMagicLink() {
-    if (!email.trim()) {
-      toast.error("Enter your email first.")
-      return
-    }
-    setLoading(true)
-    try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email: email.trim(),
-        options: { emailRedirectTo: window.location.origin },
-      })
-      if (error) throw error
-      toast.success("Magic link sent — check your email.")
     } catch (err) {
       toast.error(err instanceof Error ? humanizeAuthError(err.message) : "Something went wrong")
     } finally {
@@ -159,43 +138,25 @@ export function Login() {
               Sign in or create an account to reach your knowledge base.
             </p>
 
-            <Tabs defaultValue="password" className="mt-8">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="password">Password</TabsTrigger>
-                <TabsTrigger value="magic">Magic link</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="password" className="space-y-4 pt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="eyebrow-plain">Email</Label>
-                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="eyebrow-plain">Password</Label>
-                  <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
-                </div>
-                <div className="flex gap-2 pt-2">
-                  <Button className="group flex-1" disabled={loading} onClick={() => handlePasswordSignIn("signin")}>
-                    Sign in
-                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-                  </Button>
-                  <Button className="flex-1" variant="outline" disabled={loading} onClick={() => handlePasswordSignIn("signup")}>
-                    Create account
-                  </Button>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="magic" className="space-y-4 pt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="magic-email" className="eyebrow-plain">Email</Label>
-                  <Input id="magic-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
-                </div>
-                <Button className="group w-full" disabled={loading} onClick={handleMagicLink}>
-                  Send magic link
+            <div className="mt-8 space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="eyebrow-plain">Email</Label>
+                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password" className="eyebrow-plain">Password</Label>
+                <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button className="group flex-1" disabled={loading} onClick={() => handlePasswordSignIn("signin")}>
+                  Sign in
                   <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
                 </Button>
-              </TabsContent>
-            </Tabs>
+                <Button className="flex-1" variant="outline" disabled={loading} onClick={() => handlePasswordSignIn("signup")}>
+                  Create account
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </main>

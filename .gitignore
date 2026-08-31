@@ -13,6 +13,7 @@ api/.env
 
 # Vercel
 .vercel/
+vercel.env.local
 
 # OS
 .DS_Store

@@ -37,13 +37,21 @@ export function Login() {
     }
     setLoading(true)
     try {
-      const { error } =
+      const { data, error } =
         mode === "signin"
           ? await supabase.auth.signInWithPassword({ email: email.trim(), password })
           : await supabase.auth.signUp({ email: email.trim(), password })
       if (error) throw error
       if (mode === "signup") {
-        toast.success("Check your email to confirm your account.")
+        if (data.session) {
+          navigate("/")
+          return
+        }
+        // Supabase deliberately obscures whether an email is already registered.
+        // Keep the response accurate without leaking account existence.
+        toast.success(
+          "If this is a new account, check your email. Already registered? Sign in instead.",
+        )
       } else {
         navigate("/")
       }

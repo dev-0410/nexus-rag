@@ -40,7 +40,11 @@ export function Login() {
       const { data, error } =
         mode === "signin"
           ? await supabase.auth.signInWithPassword({ email: email.trim(), password })
-          : await supabase.auth.signUp({ email: email.trim(), password })
+          : await supabase.auth.signUp({
+              email: email.trim(),
+              password,
+              options: { emailRedirectTo: window.location.origin },
+            })
       if (error) throw error
       if (mode === "signup") {
         if (data.session) {
